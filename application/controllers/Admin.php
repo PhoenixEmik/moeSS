@@ -64,7 +64,6 @@ class Admin extends CI_Controller
         $sidebar_data['log_a_active'] = (bool) FALSE;
         $sidebar_data['log_p_active'] = (bool) FALSE;
         $sidebar_data['log_o_active'] = (bool) FALSE;
-        $sidebar_data['goods_active'] = (bool) FALSE;
         return $sidebar_data;
     }
 
@@ -214,7 +213,7 @@ class Admin extends CI_Controller
             $this->load->view( 'admin/admin_sidebar', $data );
 
             $data['nodes'] = $this->admin_model->get_nodes();
-            $this->load->view( 'admin/admin_nodes', $data );    
+            $this->load->view( 'admin/admin_nodes', $data );
             $this->load->view( 'admin/admin_footer' );
         }
         else
@@ -241,7 +240,7 @@ class Admin extends CI_Controller
 
             $data['node_count'] = $this->admin_model->c_nodes();
             $data['all_user'] = $this->admin_model->c_users();
-            $this->load->view( 'admin/admin_codes', $data );    
+            $this->load->view( 'admin/admin_codes', $data );
             //$this->load->view( 'admin/admin_footer' );
         }
         else
@@ -275,7 +274,7 @@ class Admin extends CI_Controller
             $data['user_time_count_24'] = $this->admin_model->c_user_time(3600 * 24);
             $data['mt'] = human_file_size( $this->admin_model->get_month_traffic() );
             $data['version'] = $this->admin_model->get_version();
-            $this->load->view( 'admin/admin_sysinfo', $data );    
+            $this->load->view( 'admin/admin_sysinfo', $data );
             $this->load->view( 'admin/admin_footer' );
         }
         else
@@ -1124,64 +1123,6 @@ class Admin extends CI_Controller
         return;
     }
 
-    function pay_log()
-    {
-        if ($this->is_login())
-        {
-            //$this->load->view('welcome_message');
-            $this->load->helper('comm');
-            $data['user_name'] = $this->session->userdata('s_admin_username');
-            $data['gravatar'] = get_gravatar($this->session->userdata('s_admin_email'));
-            $this->load->view( 'admin/admin_header' );
-            $this->load->view( 'admin/admin_nav', $data );
-
-            $data = $this->sidebar();
-            $data['log_active'] = (bool) TRUE;
-            $data['log_p_active'] = (bool) TRUE;
-            $this->load->view( 'admin/admin_sidebar', $data );
-
-            $data['mode'] = "admin";
-            $data['logs'] = $this->admin_model->get_log('pay');
-            $this->load->view( 'admin/admin_log_pay', $data );
-            $this->load->view( 'admin/admin_footer' );
-
-        }
-        else
-        {
-            redirect(site_url('admin/login'));
-        }
-        return;
-    }
-
-    function order_log()
-    {
-        if ($this->is_login())
-        {
-            //$this->load->view('welcome_message');
-            $this->load->helper('comm');
-            $data['user_name'] = $this->session->userdata('s_admin_username');
-            $data['gravatar'] = get_gravatar($this->session->userdata('s_admin_email'));
-            $this->load->view( 'admin/admin_header' );
-            $this->load->view( 'admin/admin_nav', $data );
-
-            $data = $this->sidebar();
-            $data['log_active'] = (bool) TRUE;
-            $data['log_o_active'] = (bool) TRUE;
-            $this->load->view( 'admin/admin_sidebar', $data );
-
-            $data['mode'] = "admin";
-            $data['logs'] = $this->admin_model->get_log('order');
-            $this->load->view( 'admin/admin_log_order', $data );
-            $this->load->view( 'admin/admin_footer' );
-
-        }
-        else
-        {
-            redirect(site_url('admin/login'));
-        }
-        return;
-    }
-	
     function add_traffic($uid)
     {
         if ($this->is_login())

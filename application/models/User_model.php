@@ -235,85 +235,6 @@ class User_model extends CI_Model
         }
     }
 
-    function get_invite_codes($uid = NULL)
-    {
-        $this->db->where('user', '2');
-        $this->db->where('used', '0');
-        if ($uid && $uid != "")
-        {
-            $where = "( owner = 0 or owner = {$uid} or owner is NULL)";
-            $this->db->where($where);
-        }
-        $query = $this->db->get('invite_code');
-        if ($query->num_rows() > 0)
-        {
-            return $query->result();
-        }
-        else
-        {
-            return (bool) FALSE;
-        }
-    }
-
-    function get_code_number($uid)
-    {
-        $this->db->select('invite_num');
-        $this->db->where('uid', $uid);
-        $query = $this->db->get('user');
-        if ($query->num_rows() > 0)
-        {
-            return $query->result()[0]->invite_num;
-        }
-        else
-        {
-            return FALSE;
-        }
-    }
-    function generate_user_code($uid)
-    {
-        $invite_num = $this->get_code_number($uid);
-        if ($invite_num > 0)
-        {
-            $invite_num--;
-            $x = rand(10, 1000);
-            $z = rand(10, 1000);
-            $x = md5($x).md5($z);
-            $x = base64_encode($x);
-            $code = substr($x, rand(1, 13), 24);
-            $data = array(
-                'code' => $code,
-                'user' => '2',
-                'owner' => $uid
-            );
-            if ($this->db->insert('invite_code', $data))
-            {
-                $data = array('invite_num' => $invite_num);
-                $this->db->where('uid', $uid);
-                $this->db->limit(1);
-                if ($this->db->update('user',$data))
-                {
-                    $data = array(
-                        'result' => TRUE,
-                        'code' => $code
-                    );
-                    return $data;
-                }
-                else
-                {
-                    return FALSE;
-                }
-            }
-            else
-            {
-                return FALSE;
-            }
-        }
-        else
-        {
-            return FALSE;
-        }
-    }
-
     function profile_update($uid, $username, $nowpassword, $password, $email)
     {
         $this->db->where('uid', $uid);
@@ -699,61 +620,6 @@ class User_model extends CI_Model
         }
     }
 
-    function create_transaction($trade_no, $user_name, $amount, $ip)
-    {
-        $data = array(
-            'trade_no' => $trade_no,
-            'user_name' => $user_name,
-            'amount' => $amount,
-            'ip' => $ip,
-            'result' => FALSE,
-            'ctime' => time(),
-            'ftime' => 0
-        );
-
-        return $this->db->insert('transactions', $data);
-    }
-
-    function insert_trade_form($trade_no, $user_name, $body)
-    {
-        $data = array(
-            'trade_no' => $trade_no,
-            'user_name' => $user_name,
-            'body' => $body,
-            'time' => time()
-        );
-
-        return $this->db->insert('transaction_form', $data);
-    }
-
-    function t_select($trade_no)
-    {
-        $this->db->where('trade_no', $trade_no);
-        $query = $this->db->get('transactions');
-        if ($query->num_rows() > 0)
-        {
-            return $query->result()[0];
-        }
-        else
-        {
-            return FALSE;
-        }
-    }
-
-    function t_f_select($trade_no)
-    {
-        $this->db->where('trade_no', $trade_no);
-        $query = $this->db->get('transaction_form');
-        if ($query->num_rows() > 0)
-        {
-            return $query->result()[0];
-        }
-        else
-        {
-            return FALSE;
-        }
-    }
-
     function get_log($mode = NULL, $user_name)
     {
         if ($mode)
@@ -765,12 +631,6 @@ class User_model extends CI_Model
                     $this->db->order_by('time', 'DESC');
                     $this->db->where('user_name', $user_name);
                     return $this->db->get('user_login')->result();
-                case "pay":
-                    $this->db->where('user_name', $user_name);
-                    return $this->db->get('transactions')->result();
-                case "order":
-                    $this->db->where('user_name', $user_name);
-                    return $this->db->get('orders')->result();
             }
         }
     }

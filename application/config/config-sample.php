@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Don't forget change database.conf to connect link the database.
  */
 
-define('SITE_NAME', 'Asia SS');
+define('SITE_NAME', 'moe SS');
 
 /*
 |--------------------------------------------------------------------------
@@ -64,7 +64,7 @@ define('SITE_NAME', 'Asia SS');
 | environments.
 |
 */
-$config['base_url'] = 'https://ss.qaq.moe/';
+$config['base_url'] = 'http://your-domain/';
 
 /*
 |--------------------------------------------------------------------------
@@ -354,7 +354,7 @@ $config['cache_query_string'] = FALSE;
 | http://codeigniter.com/user_guide/libraries/sessions.html
 |
 */
-$config['encryption_key'] = 'somethingRandomHere';
+$config['encryption_key'] = 'changethisencryptionkeytorandomstrings';
 
 /*
 |--------------------------------------------------------------------------

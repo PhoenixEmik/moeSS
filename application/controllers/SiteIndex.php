@@ -45,10 +45,4 @@ class SiteIndex extends CI_Controller {
         $this->load->view('site_index');
     }
 
-    function view_code()
-    {
-        $this->load->model('index_model');
-        $data['codes'] = $this->index_model->get_codes();
-        $this->load->view('site_code', $data);
-    }
 }

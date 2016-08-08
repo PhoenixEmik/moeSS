@@ -69,24 +69,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div><!-- /.box -->
             </div><!-- /.col (left) -->
 
-            <div class="col-md-6">
-                <div class="box box-solid">
-                    <div class="box-header">
-                        <i class="fa fa-code"></i>
-                        <h3 class="box-title">测试节点</h3>
-                    </div><!-- /.box-header -->
-                    <div class="box-body">
-                        <div class="callout callout-warning">
-                            <h4>注意!</h4>
-                            <p>测试节点可能随时撤销，有问题请反馈.</p>
-                        </div><?php if ($test_nodes) { foreach ($test_nodes as $node): ?>
-                            <p><?php echo $node->node_name; ?>:  <code><?php echo $node->node_server; ?></code> <?php echo $node->node_info; ?><?php if ($node->node_method != $default_method) {echo " <code>$node->node_method</code>";} ?> </p>
-                            <button class="btn btn-info btn-sm" onclick="viewConfig(<?php echo $node->id; ?>)">查看配置</button>
-                            <p></p>
-                        <?php endforeach; } ?>
-                    </div><!-- /.box-body -->
-                </div><!-- /.box -->
-            </div><!-- /.col (right) -->
         </div><!-- /.row -->
         <!-- END PROGRESS BARS -->
     </section><!-- /.content -->

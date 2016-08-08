@@ -54,7 +54,6 @@ class User extends CI_Controller
         $sidebar_data['info_active'] = (bool) FALSE;
         $sidebar_data['update_active'] = (bool) FALSE;
         $sidebar_data['code_active'] = (bool) FALSE;
-        $sidebar_data['goods_active'] = (bool) FALSE;
         $sidebar_data['logs_active'] = (bool) FALSE;
         $sidebar_data['logs_l_active'] = (bool) FALSE;
         $sidebar_data['logs_p_active'] = (bool) FALSE;
@@ -147,7 +146,7 @@ class User extends CI_Controller
     function do_register()
     {
         $username = $this->input->post('username');
-        if ( strlen($username)<6 || strlen($username)>32 )
+        if ( strlen($username)<3 || strlen($username)>32 )
         {
             echo '{"result" : "用户名不合法！" }';
             return;
@@ -372,19 +371,7 @@ class User extends CI_Controller
             $side_data['update_active'] = (bool) TRUE;
             $this->load->view( 'user/user_sidebar', $side_data );
 
-//            $user_info = $this->user_model->u_info($data['user_name']);
-//            $data['transfers'] = $user_info->u + $user_info->d;
-//            $data['all_transfer'] = $user_info->transfer_enable;
-//            $data['unused_transfer'] = human_file_size( $data['all_transfer'] - $data['transfers'] );
-//            $data['used_100'] = round( ($data['transfers'] / $data['all_transfer'] * 100), 2 );
-//            $data['transfers'] = human_file_size( $data['transfers'] );
-//            $data['all_transfer'] = human_file_size( $data['all_transfer'] );
-//            $data['passwd'] = $user_info->passwd;
-//            $data['plan'] = $user_info->plan;
-//            $data['port'] = $user_info->port;
-//            $data['last_check_in_time'] = $user_info->last_check_in_time;
-//            $data['unix_time'] = $user_info->t;
-//            $data['is_able_to_check_in'] = is_able_to_check_in( $user_info->last_check_in_time );
+
 
             $this->load->view( 'user/user_profile', $data );
             //$this->load->view( 'user/user_footer' );
@@ -394,131 +381,6 @@ class User extends CI_Controller
             redirect(site_url('user/login'));
         }
         return;
-    }
-
-    function invite_code()
-    {
-        if ($this->is_login())
-        {
-            //$this->load->view('welcome_message');
-            $this->load->helper('comm');
-            $data['user_name'] = $this->session->userdata('s_username');
-            $data['gravatar'] = get_gravatar($this->session->userdata('s_email'));
-            $this->load->view( 'user/user_header' );
-            $this->load->view( 'user/user_nav', $data );
-
-            $side_data = $this->sidebar();
-            $side_data['code_active'] = (bool) TRUE;
-            $this->load->view( 'user/user_sidebar', $side_data );
-
-            $codes = $this->user_model->get_invite_codes($this->session->userdata('s_uid'));
-            $data['codes'] = $codes;
-            $code_num = $this->user_model->get_code_number($this->session->userdata('s_uid'));
-            $data['code_num'] = $code_num;
-
-            $this->load->view( 'user/user_code', $data );
-            $this->load->view( 'user/user_footer' );
-        }
-        else
-        {
-            redirect(site_url('user/login'));
-        }
-        return;
-    }
-
-    function get_invite_code()
-    {
-        if ($this->is_login())
-        {
-            $uid = $this->session->userdata('s_uid');
-            $result = $this->user_model->generate_user_code($uid);
-            if ($result && $result['result'])
-            {
-                echo "您本次获得的邀请码是：" . $result['code'];
-                return;
-            }
-            else
-            {
-                echo "暂时没有邀请资格！";
-                return;
-            }
-        }
-        else
-        {
-            redirect(site_url('user/login'));
-        }
-        return;
-    }
-
-    function pay()
-    {
-        if ($this->is_login())
-        {
-            echo "开源版无此功能！";
-        }
-        else
-        {
-            redirect(site_url('user/login'));
-        }
-        return;
-    }
-
-    function view_order($trade_no)
-    {
-        if ($this->is_login())
-        {
-            $this->load->helper('comm');
-            $data['user_name'] = $this->session->userdata('s_username');
-            $data['gravatar'] = get_gravatar($this->session->userdata('s_email'));
-            $this->load->view( 'user/user_header' );
-            $this->load->view( 'user/user_nav', $data );
-
-            $data = NULL;
-            $side_data = $this->sidebar();
-            $side_data['info_active'] = (bool) TRUE;
-            $this->load->view( 'user/user_sidebar', $side_data );
-
-            $trade = $this->user_model->t_select($trade_no);
-            if ($trade)
-            {
-                $data = NULL;
-                if ($trade->user_name != $this->session->userdata('s_username'))
-                {
-                    $data['error'] = TRUE;
-                }
-                else
-                {
-                    $data['error'] = FALSE;
-                    $form = $this->user_model->t_f_select($trade_no)->body;
-                    $data['form'] = str_replace("<script>document.forms['alipaysubmit'].submit();</script>", "", $form);
-                    $data['trade_no'] = $trade_no;
-                    $data['user_name'] = $trade->user_name;
-                    $data['amount'] = $trade->amount;
-                    $data['time'] = date('Y-m-d H:i:s', $trade->ctime);
-                    if ($trade->result)
-                    {
-                        $data['order_result'] = "完成";
-                        $data['form'] = "<div></div>";
-                    }
-                    else
-                    {
-                        $data['order_result'] = "进行中";
-                    }
-                }
-            }
-            else
-            {
-                $data['error'] = TRUE;
-            }
-            $this->load->view( 'user/user_order', $data );
-            $this->load->view( 'user/user_footer' );
-            return;
-        }
-        else
-        {
-            redirect(site_url('user/login'));
-            return;
-        }
     }
 
     function do_profile_update()
@@ -675,7 +537,7 @@ class User extends CI_Controller
                     //redirect(site_url('user'));
                 }
             }
-            else 
+            else
             {
                 echo '现在无法签到！';
                 //redirect(site_url('user'));
@@ -910,32 +772,6 @@ class User extends CI_Controller
         }
     }
 
-    function view_goods()
-    {
-        if ($this->is_login())
-        {
-            //$this->load->view('welcome_message');
-            $this->load->helper('comm');
-            $data['user_name'] = $this->session->userdata('s_username');
-            $data['gravatar'] = get_gravatar($this->session->userdata('s_email'));
-            $this->load->view( 'user/user_header' );
-            $this->load->view( 'user/user_nav', $data );
-
-            $side_data = $this->sidebar();
-            $side_data['goods_active'] = (bool) TRUE;
-            $this->load->view( 'user/user_sidebar', $side_data );
-
-            $data['goods'] = $this->user_model->get_goods();
-            $this->load->view( 'user/user_goods', $data );
-            $this->load->view( 'user/user_footer' );
-        }
-        else
-        {
-            redirect('user/login');
-        }
-        return;
-    }
-	
     function login_log()
     {
         if ($this->is_login())
@@ -964,59 +800,4 @@ class User extends CI_Controller
         return;
     }
 
-    function pay_log()
-    {
-        if ($this->is_login())
-        {
-            //$this->load->view('welcome_message');
-            $this->load->helper('comm');
-            $data['user_name'] = $this->session->userdata('s_username');
-            $data['gravatar'] = get_gravatar($this->session->userdata('s_email'));
-            $this->load->view( 'user/user_header' );
-            $this->load->view( 'user/user_nav', $data );
-
-            $data = $this->sidebar();
-            $data['logs_active'] = (bool) TRUE;
-            $data['logs_p_active'] = (bool) TRUE;
-            $this->load->view( 'user/user_sidebar', $data );
-
-            $data['logs'] = $this->user_model->get_log('pay', $this->session->userdata('s_username'));
-            $this->load->view( 'user/user_log_pay', $data );
-            $this->load->view( 'user/user_footer' );
-
-        }
-        else
-        {
-            redirect(site_url('user/login'));
-        }
-        return;
-    }
-
-    function order_log()
-    {
-        if ($this->is_login())
-        {
-            //$this->load->view('welcome_message');
-            $this->load->helper('comm');
-            $data['user_name'] = $this->session->userdata('s_username');
-            $data['gravatar'] = get_gravatar($this->session->userdata('s_email'));
-            $this->load->view( 'user/user_header' );
-            $this->load->view( 'user/user_nav', $data );
-
-            $data = $this->sidebar();
-            $data['logs_active'] = (bool) TRUE;
-            $data['logs_o_active'] = (bool) TRUE;
-            $this->load->view( 'user/user_sidebar', $data );
-
-            $data['logs'] = $this->user_model->get_log('order', $this->session->userdata('s_username'));
-            $this->load->view( 'user/user_log_order', $data );
-            $this->load->view( 'user/user_footer' );
-
-        }
-        else
-        {
-            redirect(site_url('user/login'));
-        }
-        return;
-    }
 }

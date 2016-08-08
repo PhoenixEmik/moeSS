@@ -59,8 +59,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div><!-- /.box-header -->
                     <div class="box-body">
                         <div class="callout callout-warning">
-                            <h4>注意!</h4>
-                            <p>测试中，测试期间随时删号，不保证可用。<br>所有节点均不支持外发邮件。</p>
+                            <h4>喵</h4>
                         </div>
                     </div><!-- /.box-body -->
                 </div><!-- /.box -->
@@ -73,7 +72,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="box-body">
                         <p> 端口: <code><?php echo $port; ?></code> </p>
                         <p> 密码: <?php echo $passwd; ?> </p>
-                        <p> 套餐: <span class="label label-info"> <?php echo $plan; ?> </span> </p>
                         <p> 最后使用时间: <code><?php echo date('Y-m-d H:i:s',$unix_time); ?></code> </p>
                     </div><!-- /.box-body -->
                 </div><!-- /.box -->

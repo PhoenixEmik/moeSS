@@ -48,18 +48,4 @@ class Index_model extends CI_Model
         return;
     }
 
-    function get_codes()
-    {
-        $this->db->where('user', '0');
-        $this->db->where('used', '0');
-        $query = $this->db->get('invite_code');
-        if ($query->num_rows() > 0)
-        {
-            return $query->result();
-        }
-        else
-        {
-            return (bool) FALSE;
-        }
-    }
 }

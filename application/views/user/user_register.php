@@ -107,7 +107,7 @@ $this->load->helper('form');
                     rules:{
                         username: {
                             required: true,
-                            minlength: 6,
+                            minlength: 3,
                             onlyAlphaNumber: true
                         },
                         password: {
@@ -125,7 +125,7 @@ $this->load->helper('form');
                         }<?php if( $invite_only ) { ?>,
                         code: {
                             required: true,
-                            onlyAlphaNumber: true
+                            //onlyAlphaNumber: true
                         }
                         <?php } ?>
                     }
@@ -233,13 +233,6 @@ $this->load->helper('form');
         </div>
     <?php echo form_close(); ?>
 
-    <div class="margin text-center">
-        <span>下面的按钮暂时是不可用的</span>
-        <br/>
-        <button class="btn bg-light-blue btn-circle"><i class="fa fa-facebook"></i></button>
-        <button class="btn bg-aqua btn-circle"><i class="fa fa-twitter"></i></button>
-        <button class="btn bg-red btn-circle"><i class="fa fa-google-plus"></i></button>
-    </div>
 </div>
 </body>
 </html>
